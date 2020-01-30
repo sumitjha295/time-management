@@ -5,5 +5,7 @@
         <file>CheckIn.qml</file>
         <file>CheckOut.qml</file>
         <file>qtquickcontrols2.conf</file>
+        <file>UserForm.qml</file>
+        <file>UserInformation.qml</file>
     </qresource>
 </RCC>

@@ -1,14 +1,22 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.5
-import "."
 
 ApplicationWindow {
-    id: window
+    id: mainWindow
+    function changeView(page, properties) {
+        stackView.push(page, properties);
+    }
+
+    function goBack() {
+        if (stackView.depth > 1) {
+            stackView.pop()
+        }
+    }
+
     visible: true
     width: 640
     height: 480
     title: qsTr("Time Management")
-
     header: ToolBar {
         contentHeight: toolButton.implicitHeight
 
@@ -18,7 +26,7 @@ ApplicationWindow {
             font.pixelSize: Qt.application.font.pixelSize * 1.6
             onClicked: {
                 if (stackView.depth > 1) {
-                    stackView.pop()
+                    goBack()
                 } else {
                     drawer.open()
                 }
@@ -34,7 +42,7 @@ ApplicationWindow {
     Drawer {
         id: drawer
         width: 150
-        height: window.height
+        height: mainWindow.height
 
         Column {
             anchors.fill: parent
@@ -43,7 +51,7 @@ ApplicationWindow {
                 text: qsTr("Check-in")
                 width: parent.width
                 onClicked: {
-                    stackView.push("CheckIn.qml")
+                    changeView("CheckIn.qml")
                     drawer.close()
                 }
             }
@@ -51,7 +59,7 @@ ApplicationWindow {
                 text: qsTr("Check-out")
                 width: parent.width
                 onClicked: {
-                    stackView.push("CheckOut.qml")
+                    changeView("CheckOut.qml")
                     drawer.close()
                 }
             }
@@ -60,14 +68,7 @@ ApplicationWindow {
 
     StackView {
         id: stackView
-        initialItem: homepage
+        initialItem: "Home.qml"
         anchors.fill: parent
-    }
-
-    Home {
-        id : homepage
-        onChangeView : {
-            stackView.push(page)
-        }
     }
 }

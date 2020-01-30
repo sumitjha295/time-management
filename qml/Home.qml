@@ -3,7 +3,6 @@ import QtQuick.Controls 2.5
 
 Page {
     title: qsTr("Home")
-    signal changeView(string page)
 
     property var centerOffset: 100
     Button {
@@ -11,7 +10,7 @@ Page {
         anchors.centerIn: parent
         anchors.horizontalCenterOffset: -centerOffset
         text: qsTr("Check-in")
-        onClicked:changeView("CheckIn.qml")
+        onClicked: mainWindow.changeView("CheckIn.qml")
     }
 
     Button {
@@ -19,6 +18,6 @@ Page {
         anchors.centerIn: parent
         anchors.horizontalCenterOffset: centerOffset
         text: qsTr("Check-out")
-        onClicked:changeView("CheckOut.qml")
+        onClicked: mainWindow.changeView("CheckOut.qml")
     }
 }
