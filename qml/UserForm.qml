@@ -70,6 +70,7 @@ Page {
                 Layout.fillWidth: true
                 Layout.columnSpan: 3
                 placeholderText: qsTr("first name")
+                text: "Sumit"
             }
 
             TextField {
@@ -78,6 +79,7 @@ Page {
                 Layout.fillWidth: true
                 Layout.columnSpan: 2
                 placeholderText: qsTr("last name")
+                text: "Jha"
             }
 
             Label {
@@ -198,7 +200,7 @@ Page {
                 id: save
                 text: qsTr("Check-in")
                 onClicked: {
-                    mainWindow.changeView("UserInformation.qml")
+                    mainWindow.changeView("UserInformation.qml", {"firstName": firstName.text , "lastName": lastName.text})
                 }
             }
 

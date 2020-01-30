@@ -1,4 +1,4 @@
-QT += quick
+QT += quick printsupport
 
 CONFIG += c++17
 
@@ -13,15 +13,22 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+
+HEADERS += \
+    cpp\include\*.h \
+    QR-Code-generator\cpp\QrCode.hpp
+
+
 SOURCES += \
         cpp\main.cpp \
-        cpp\qrcode\*.cpp
+        cpp\src\*.cpp \
+        QR-Code-generator\cpp\QrCode.cpp
 
 RESOURCES += \
         qml\qml.qrc
 
 INCLUDEPATH += \
-    cpp\qrcode\*.hpp
+    cpp\include
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =

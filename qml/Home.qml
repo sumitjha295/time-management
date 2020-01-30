@@ -3,7 +3,6 @@ import QtQuick.Controls 2.5
 
 Page {
     title: qsTr("Home")
-
     property var centerOffset: 100
     Button {
         id: checkInButton
