@@ -22,6 +22,79 @@ int main(int argc, char *argv[])
     return app.exec();
 }
 /*
+
+void SpecialWidget(std::string_view str_id, camera_preview_state& preview_state)
+{
+    auto scroll_x = ImGui::GetScrollX();
+    auto scroll_y = ImGui::GetScrollY();
+    ImVec2 margin = ImVec2(20.0, 10.0);
+    ImGui::SetCursorPos(ImVec2(scroll_x, scroll_y));
+    ImVec2 p = ImGui::GetCursorScreenPos();
+    ImDrawList* draw_list = ImGui::GetWindowDrawList();
+    float height = ImGui::GetWindowHeight();//- ImGui::GetCursorPosY() * 2.0f;
+    float width = ImGui::GetWindowWidth();// -  ImGui::GetCursorPosX() * 2.0f;;
+    ImGui::InvisibleButton(str_id.data(), ImVec2(width, height));
+    ImGui::SetItemUsingMouseWheel();
+    const auto is_hovered{ImGui::IsItemHovered()};
+    const auto is_dragging{ImGui::IsMouseDragging(ImGuiMouseButton_Left)};
+
+
+    auto textSize   = ImGui::CalcTextSize(preview_state.text.c_str());
+    ImGui::SetCursorPos(ImVec2((width - textSize.x) * 0.5f + scroll_x , scroll_y+margin.y + textSize.y*0.5));
+    //ImGui::Text("%d", is_dragging);
+
+    ImGui::Button(preview_state.text.c_str());
+    ImGui::SameLine();
+
+    if (!is_hovered) return;
+        
+    
+    if(is_dragging)
+    {
+        ImGui::SetScrollX(scroll_x- 0.1f * ImGui::GetMouseDragDelta().x);
+    }
+    else {
+        ImGui::SetScrollX(scroll_x-20.0f*ImGui::GetIO().MouseWheelH);
+    }
+    //draw_list->AddRectFilled(p, ImVec2(p.x + width + scroll_x, p.y + height + scroll_y), IM_COL32(128, 0, 0, 128));
+    //draw_list->AddRectFilled(p, ImVec2(p.x + width, p.y + height), IM_COL32(0, 128, 0, 46));
+
+    
+    auto long_button_height = 5 * ImGui::GetFrameHeight();
+    auto long_button_pos_y = margin.y + (height-long_button_height)*0.5f;
+    auto icon_button_size =ImGui::GetFrameHeight();
+    auto long_button_width = 0.6f * icon_button_size;
+    
+    ImGui::SetCursorPos(ImVec2(margin.x + scroll_x, scroll_y +long_button_pos_y));
+    
+    bool is_pressed = ImGui::IsMouseDown(ImGuiMouseButton_Left);
+    bool is_clicked = ImGui::IsMouseClicked(ImGuiMouseButton_Left);
+    if(IconButton(str_id.data(), close_texture, long_button_width ,long_button_height) && is_pressed){
+        ImGui::SetScrollX(scroll_x-speed);
+    };
+    
+    auto left_x = width-2*margin.x +  scroll_x ;
+    ImGui::SetCursorPos(ImVec2(left_x, scroll_y + long_button_pos_y));
+    if(IconButton(str_id.data(), close_texture, long_button_width ,long_button_height) && is_pressed)
+    {
+        ImGui::SetScrollX(scroll_x+speed);
+    }
+
+    ImGui::SetCursorPos(ImVec2(left_x, margin.y + scroll_y));
+    if(IconButton(str_id.data(), close_texture, icon_button_size ,icon_button_size) && is_clicked){
+        preview_state.change_mode();
+    };
+
+    left_x -= (ImGui::GetItemRectSize().x + 5.0);
+    ImGui::SetCursorPos(ImVec2(left_x, margin.y + scroll_y));
+    IconButton(str_id.data(), fullscreen_texture, icon_button_size ,icon_button_size);
+
+    
+    left_x -= (ImGui::GetItemRectSize().x + 5.0);
+    ImGui::SetCursorPos(ImVec2(left_x, margin.y + scroll_y));
+    IconButton(str_id.data(), back_texture, icon_button_size ,icon_button_size);
+}
+
 // Dear ImGui: standalone example application for OSX + OpenGL2, using legacy fixed pipeline
 // If you are new to Dear ImGui, read documentation from the docs/ folder + read the top of imgui.cpp.
 // Read online: https://github.com/ocornut/imgui/tree/master/docs
