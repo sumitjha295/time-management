@@ -23,6 +23,61 @@ int main(int argc, char *argv[])
 }
 /*
 
+bool LoadTextureFromFile2(const char* filename, GLuint* out_texture, int* out_width, int* out_height)
+{
+        
+       cv::Mat image = cv::imread(filename, cv::IMREAD_UNCHANGED);
+      //cv::Mat flipped;
+      //cv::flip(image, flipped, 0);
+      //image = flipped;
+      if(image.empty())
+      {
+          return false;
+      }
+      //cv::imshow(filename, image);
+      //cv::flip(image, image, 0);
+      // Create a OpenGL texture identifier
+      GLuint image_texture;
+      glGenTextures(1, &image_texture);
+      glBindTexture(GL_TEXTURE_2D, image_texture);
+
+     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+       // Set texture clamping method
+     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+
+
+    //use fast 4-byte alignment (default anyway) if possible
+    glPixelStorei(GL_UNPACK_ALIGNMENT, (image.step & 3) ? 1 : 4);
+
+    //set length of one complete row in data (doesn't need to equal image.cols)
+    glPixelStorei(GL_UNPACK_ROW_LENGTH, image.step/image.elemSize());
+
+    
+     glTexImage2D(GL_TEXTURE_2D,     // Type of texture
+                    0,                 // Pyramid level (for mip-mapping) - 0 is the top level
+                    GL_RGBA,            // Internal colour format to convert to
+                    image.cols,          // Image width  i.e. 640 for Kinect in standard mode
+                    image.rows,          // Image height i.e. 480 for Kinect in standard mode
+                    0,                 // Border width in pixels (can either be 1 or 0)
+                    GL_BGRA, // Input image format (i.e. GL_RGB, GL_RGBA, GL_BGR etc.)
+                    GL_UNSIGNED_BYTE,  // Image data type
+                    image.ptr());        // The actual image data itself
+
+     glGenerateMipmap(GL_TEXTURE_2D);
+
+      *out_texture = image_texture;
+      *out_width = image.cols;
+      *out_height = image.rows;
+    
+
+      return true;
+        
+
+}
+
 void SpecialWidget(std::string_view str_id, camera_preview_state& preview_state)
 {
     auto scroll_x = ImGui::GetScrollX();
