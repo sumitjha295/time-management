@@ -23,6 +23,76 @@ int main(int argc, char *argv[])
 }
 /*
 
+
+    static bool show_demo_hello = true;
+    auto draw_button = [](auto id, auto text){
+        //ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.0f);
+        ImGui::PushID(id);
+        bool clicked = ImGui::Button(text, ImVec2(button_width, 0.0f));
+        ImGui::PopID();
+       // ImGui::PopStyleVar();
+        return clicked;
+    };
+
+
+   
+    ImGui::SetNextWindowClass(&window_class);
+    ImGui::PushStyleColor(ImGuiCol_MenuBarBg, ImVec4(0.0f, .0f, 1.0f, 1.0f)); // Menu bar background color
+    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding,ImVec2(padding_x,padding_y));
+    ImGuiWindowFlags window_flags_1 = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_MenuBar;
+
+    ImGui::Begin("Left", &show_demo_hello, window_flags_1);
+    //ImGui::PushClipRect(clip_rect.Min, clip_rect.Max, true);
+
+    if (ImGui::BeginMenuBar())
+    {
+        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding,ImVec2(0,0));
+
+        ImGui::Text("This is header");
+        {
+            ImGui::SetCursorPos({ImGui::GetWindowWidth()-2*button_width, ImGui::GetScrollY() + padding_y});
+            auto pos = ImGui::GetCursorScreenPos();
+           
+            if (draw_button("a","+")) ImGui::OpenPopup("tstElementList1");
+            ImGui::SetNextWindowPos({pos.x+ button_width-menu_width, ImGui::GetCursorScreenPos().y + ImGui::GetItemRectSize().y + padding_y});
+            ImGui::SetNextWindowSize({menu_width,0.0f});
+            if (ImGui::BeginPopup("tstElementList1"))
+            {
+                ImGui::MenuItem("element 10");
+                ImGui::MenuItem("element 20");
+                auto p = ImGui::GetItemRectSize().x *0.9f;
+                ImGui::Button("Yes", ImVec2(p, 0.0f));
+                ImGui::Button("No", ImVec2(p, 0.0f));
+                ImGui::EndPopup();
+            }
+        }
+        {
+            ImGui::SetCursorPos({ImGui::GetWindowWidth()-button_width, ImGui::GetScrollY() + padding_y});
+            auto pos = ImGui::GetCursorScreenPos();
+           
+            if (draw_button("b","\xef\x9d\x96")) ImGui::OpenPopup("tstElementList2");
+            ImGui::SetNextWindowPos({pos.x+ button_width-menu_width, ImGui::GetCursorScreenPos().y + ImGui::GetItemRectSize().y + padding_y});
+            ImGui::SetNextWindowSize({menu_width,0.0f});
+            if (ImGui::BeginPopup("tstElementList2"))
+            {
+                ImGui::MenuItem("element 1");
+                ImGui::MenuItem("element 2");
+                auto p = ImGui::GetItemRectSize().x *0.9f;
+                ImGui::Button("Yes", ImVec2(p, 0.0f));
+                ImGui::Button("No", ImVec2(p, 0.0f));
+                ImGui::EndPopup();
+            }
+        }
+        ImGui::PopStyleVar(1);
+         ImGui::EndMenuBar();
+        //ImGui::PopClipRect();
+        
+     }
+
+    ImGui::End();
+    ImGui::PopStyleVar(1);
+    ImGui::PopStyleColor(1);
+
 bool LoadTextureFromFile2(const char* filename, GLuint* out_texture, int* out_width, int* out_height)
 {
         
