@@ -226,6 +226,8 @@
     static float button_width = 32.0f;
 
     ImGui::SetNextWindowClass(&window_class);
+    static bool show_notification = true;
+    static bool force_notification = true;
 
     if (ImGui::Begin("Down", nullptr, ImGuiWindowFlags_MenuBar|ImGuiWindowFlags_NoTitleBar)) {
       if (ImGui::BeginMenuBar()) {
@@ -238,6 +240,12 @@
         ImGui::SliderFloat("padding_y", &padding_y, 1.0f, 10.0f);
         ImGui::SliderFloat("rad", &rad, 1.0f, 10.0f);
         ImGui::Checkbox("Demo Window", &show_demo_window);
+        ImGui::Checkbox("show_notification", &show_notification);
+        if(ImGui::Button("force_notification"))
+        {
+            force_notification = true;
+        }
+
 
     ImGui::End();
     }
@@ -245,8 +253,8 @@
 
 
     static bool show_demo_hello = true;
-    static bool show_notification = true;
-    auto draw_button = [io](auto id, auto text, auto on_click, auto on_hover){
+   
+    auto draw_button = [&](auto id, auto text, auto on_click, auto on_hover){
         ImTextureID my_tex_id = io.Fonts->TexID;
         float my_tex_w = (float)io.Fonts->TexWidth;
         float my_tex_h = (float)io.Fonts->TexHeight;
@@ -270,7 +278,7 @@
         {
             ImGui::OpenPopup(on_click);
         }
-        else if(ImGui::IsItemHovered() && show_notification)
+        else if((ImGui::IsItemHovered() && show_notification) || force_notification)
         {
             ImGui::OpenPopup(on_hover);
         }
@@ -303,6 +311,7 @@
             ImGui::SetNextWindowSize({menu_width,0.0f});
             if (ImGui::BeginPopup("on_click"))
             {
+                ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{2.0f, padding_y});
                 ImGui::PushFont(font_ptr);
                 ImGui::Text("Sumit Jha");
                 ImGui::PopFont();
@@ -311,11 +320,17 @@
                 ImGui::Separator();
                 ImGui::PopStyleColor(1);
                 ImGui::MenuItem("Reauthenticate");
+                ImGui::PopStyleVar();
                 ImGui::EndPopup();
+     
             }
             ImGui::PopStyleColor(1);
+            
+            ImGui::PushStyleVar(ImGuiStyleVar_PopupRounding, 5.0f);
+            ImGui::PushStyleVar(ImGuiStyleVar_PopupBorderSize, 0.0f);
             ImGui::PushStyleColor(ImGuiCol_PopupBg, ImVec4(1.0f, 1.0f, 1.0f, 1.0f)); // Menu bar background color
             ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(.0f, .0f, .0f, 1.0f));
+            ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(.0f, .0f, .0f, 0.0f));
             
             ImGui::SetNextWindowPos({pos.x+ button_width-2.5f*menu_width, ImGui::GetCursorScreenPos().y + ImGui::GetItemRectSize().y + padding_y});
             ImGui::SetNextWindowSize({2.5f*menu_width,0.0f});
@@ -327,13 +342,22 @@
                 ImGui::Dummy({padding_x, 0.0f});
                 ImGui::SameLine();
                 ImGui::Button("Reauthenticate");
-                ImGui::EndPopup();
+                
                 ImDrawList* draw_list = ImGui::GetWindowDrawList();
-                draw_list->AddTriangleFilled({pos.x+ button_width, ImGui::GetCursorScreenPos().y + ImGui::GetItemRectSize().y + padding_y}, <#const ImVec2 &p2#>, <#const ImVec2 &p3#>, ImGui::GetColorU32(ImVec4(1.0f, .0f, .0f, 1.0f));
-                show_notification = false;
-            }
-            ImGui::PopStyleColor(2);
+                auto l = 2.0f*padding_y;
+                auto p1 = ImVec2{ImGui::GetWindowPos().x +  ImGui::GetWindowSize().x - 2.0f, ImGui::GetWindowPos().y + 2.0f};
+                auto p2 = ImVec2{p1.x - l, p1.y};
+                auto p3 = ImVec2{0.5f*(p1.x + p2.x),  p2.y - l*0.5f};
  
+                show_notification = false;
+                force_notification = false;
+                ImGui::EndPopup();
+                //draw_list->AddCircleFilled(p1, 20.0f,  IM_COL32(255, 0, 0, 255));
+                draw_list->AddTriangleFilled(p1, p2, p3, IM_COL32(255, 255, 255, 255));
+            }
+            ImGui::PopStyleColor(3);
+            ImGui::PopStyleVar(2);
+
         }
         //ImGui::PopStyleVar(1);
 
